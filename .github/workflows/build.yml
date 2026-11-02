@@ -3,6 +3,14 @@ name: Build
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g. 3.0.5-nishisaba.1). Creates tag v<version> and a release."
+        required: true
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -17,39 +25,24 @@ jobs:
           java-version: 21
           distribution: 'temurin'
 
-      - name: Set alpha version for dev builds
-        if: github.ref == 'refs/heads/dev'
-        run: |
-          BASE=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          mvn versions:set -DnewVersion="${BASE}-alpha.${GITHUB_RUN_NUMBER}" -DgenerateBackupPoms=false
+      - name: Set release version
+        if: github.event_name == 'workflow_dispatch'
+        run: mvn -B -q versions:set -DnewVersion="${{ inputs.version }}" -DgenerateBackupPoms=false
 
       - name: Build
-        run: mvn install
-
-      - name: Resolve version
-        id: version
-        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+        run: mvn -B install
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: AntiCheatReplay
-          path: target/*.jar
+          path: target/AntiCheatReplay-*.jar
 
-      - name: Publish to Modrinth
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
-        uses: Kir-Antipov/mc-publish@v3.3
+      - name: Release
+        if: github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
         with:
-          modrinth-id: ${{ secrets.MODRINTH_PROJECT_ID }}
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          tag_name: v${{ inputs.version }}
+          target_commitish: ${{ github.sha }}
           files: target/AntiCheatReplay-*.jar
-          version: ${{ steps.version.outputs.VERSION }}
-          version-type: ${{ github.ref == 'refs/heads/master' && 'release' || 'alpha' }}
-          loaders: |
-            paper
-            folia
-          game-versions: |
-            1.21.11
-          dependencies: |
-            packetevents(required)
-            BetterReplay(required)
+          generate_release_notes: false
