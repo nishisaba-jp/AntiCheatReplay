@@ -89,7 +89,6 @@ public class ReportCommand extends ListenerBase implements CommandExecutor {
         notification = notification
                 .replace("%r", p.getName())
                 .replace("%s", target.getName())
-            .replace("%s", target.getName())
                 .replace("%t", reason);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -98,7 +97,6 @@ public class ReportCommand extends ListenerBase implements CommandExecutor {
         }
 
         reportPlayer(p, target, reason, replayName);
-    reportPlayer(p, target, reason, replayName);
 
         p.sendMessage(ChatColor.DARK_GREEN + Messages.REPORT_SUBMITTED);
 
