@@ -48,12 +48,13 @@ public class AntiCheatReplay extends JavaPlugin {
 
     private void initialInit() {
         foliaLib.getScheduler().runNextTick(task -> {
+            // Listeners read the config when they are created, so the defaults have to exist first
+            initConfig();
             checkRequiredPlugins();
             if (!isEnabled()) {
                 return;
             }
             registerListener();
-            initConfig();
             checkForUpdate();
             handleReload();
             registerCommands();
