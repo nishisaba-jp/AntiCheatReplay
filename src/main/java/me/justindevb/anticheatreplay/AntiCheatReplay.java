@@ -149,6 +149,8 @@ public class AntiCheatReplay extends JavaPlugin {
 
         initGrimConfigSettings();
 
+        initBEAntiCheatConfigSettings();
+
         getConfig().options().copyDefaults(true);
         saveConfig();
 
@@ -375,6 +377,16 @@ public class AntiCheatReplay extends JavaPlugin {
         list.add("kick");
         list.add("ban");
         getConfig().addDefault("Grim.Punish-Commands", list);
+    }
+
+    private void initBEAntiCheatConfigSettings() {
+        List<String> list = new ArrayList<>();
+        list.add("attack-angle");
+        list.add("inventory-rate");
+        getConfig().addDefault("BEAntiCheat.Disabled-Recordings", list);
+        getConfig().addDefault("BEAntiCheat.Min-VL", 2.0);
+        getConfig().addDefault("BEAntiCheat.Save-VL", 5.0);
+        getConfig().addDefault("BEAntiCheat.Save-On-Kick", true);
     }
 
     private void initGeneralConfigSettings() {

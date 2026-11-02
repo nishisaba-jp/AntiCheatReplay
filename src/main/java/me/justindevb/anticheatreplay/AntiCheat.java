@@ -59,6 +59,7 @@ public enum AntiCheat {
 	INTAVE("Intave", IntaveListener::new),
 	LIGHTANTICHEAT("LightAntiCheat", LightAntiCheatListener::new),
 	ANTIHAXERMAN("AntiHaxerman", AntiHaxermanListener::new),
+	BEANTICHEAT("BEAntiCheat", BEAntiCheatListener::new),
 	GRIMAC("GrimAC", "GrimAC", antiCheatReplay -> hasPlugin("GrimAC"), antiCheatReplay -> {
 		try {
 			return (ListenerBase) Class
