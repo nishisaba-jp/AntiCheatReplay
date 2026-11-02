@@ -311,11 +311,13 @@ public abstract class ListenerBase {
 	 */
 	protected String getReplayName(Player p, String violation) {
 		String timeStamp = getTimeStamp();
+		// Bedrock players joining through Floodgate get a "." prefix, which would make the saved file hidden
+		String name = p.getName().replaceFirst("^\\.+", "");
 
 		if (violation.length() <= 8) // Max character space we have for a violation is 8 characters
-			return p.getName() + "-" + violation + "-" + timeStamp;
+			return name + "-" + violation + "-" + timeStamp;
 
-		return p.getName() + "-" + violation.substring(0, 8) + "-" + timeStamp;
+		return name + "-" + violation.substring(0, 8) + "-" + timeStamp;
 	}
 
 	/**
