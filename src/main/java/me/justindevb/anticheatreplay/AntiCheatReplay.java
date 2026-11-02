@@ -217,6 +217,8 @@ public class AntiCheatReplay extends JavaPlugin {
     }
 
     private void initBstats() {
+        if (!getConfig().getBoolean("General.Metrics"))
+            return;
         final int pluginId = 13402;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SimplePie("anticheat", () -> {
@@ -391,7 +393,9 @@ public class AntiCheatReplay extends JavaPlugin {
 
     private void initGeneralConfigSettings() {
         FileConfiguration config = getConfig();
-        config.addDefault("General.Check-Update", true);
+        // Both report to the original project's pages, so they are off for this build
+        config.addDefault("General.Check-Update", false);
+        config.addDefault("General.Metrics", false);
         config.addDefault("General.Nearby-Range", 30);
 
         config.addDefault("General.Recording-Length", 2);
