@@ -1,7 +1,6 @@
 package me.justindevb.anticheatreplay;
 
 import com.tcoded.folialib.FoliaLib;
-import dev.brighten.api.KauriAPI;
 import me.justindevb.anticheatreplay.api.AntiCheatReplayAPI;
 import me.justindevb.anticheatreplay.commands.ReloadCommand;
 import me.justindevb.anticheatreplay.commands.ReportCommand;
@@ -89,23 +88,26 @@ public class AntiCheatReplay extends JavaPlugin {
     }
 
     /**
-     * Find a compatible AntiCheat and register support for it
+     * Find every compatible AntiCheat and register support for each of them
      */
     private void findCompatAntiCheat() {
         this.activeListeners.clear();
         this.anticheat = null;
 
         for (AntiCheat value : AntiCheat.values()) {
-            if (value.getChecker().apply(this)) {
-                final ListenerBase base = value.getInstantiator().apply(this);
+            if (!value.getChecker().apply(this)) {
+                continue;
+            }
 
-                if (base == null) {
-                    continue;
-                }
+            final ListenerBase base = value.getInstantiator().apply(this);
 
-                activeListeners.put(value, base);
+            if (base == null) {
+                continue;
+            }
+
+            activeListeners.put(value, base);
+            if (this.anticheat == null) {
                 this.anticheat = value;
-                break;
             }
         }
 
@@ -153,16 +155,12 @@ public class AntiCheatReplay extends JavaPlugin {
     }
 
     public void reloadReplayConfig() {
-        if (activeListeners.isEmpty())
-            KauriAPI.INSTANCE.unregisterEvents(this);
-        else {
-            for (ListenerBase value : activeListeners.values()) {
-                if (value instanceof Listener) {
-                    HandlerList.unregisterAll((Listener) value);
-                }
-
-                value.disinit();
+        for (ListenerBase value : activeListeners.values()) {
+            if (value instanceof Listener) {
+                HandlerList.unregisterAll((Listener) value);
             }
+
+            value.disinit();
         }
         this.activeListeners.clear();
         this.activeRecordings.clear();
