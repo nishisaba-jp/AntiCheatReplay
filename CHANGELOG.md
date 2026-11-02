@@ -4,6 +4,22 @@ All notable changes to AntiCheatReplay are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.0.5-nishisaba.1]
+
+### Added
+- BEAntiCheat support: a recording starts when a check reaches `BEAntiCheat.Min-VL` and is kept at `BEAntiCheat.Save-VL` or when BEAntiCheat kicks the player
+- Every installed supported AntiCheat is hooked instead of only the first one found
+- Releases can be built from the Actions tab
+
+### Fixed
+- Reloading with no Kauri installed failed with `NoClassDefFoundError`
+- `/report` handled every report twice
+- On the first start the listeners read the config before its defaults existed, so recordings were 0 minutes long
+
+### Changed
+- Update check and bStats metrics are off by default (`General.Check-Update`, `General.Metrics`)
+- Removed the Modrinth publishing step from the build workflow
+
 ## [Unreleased]
 
 ### Added

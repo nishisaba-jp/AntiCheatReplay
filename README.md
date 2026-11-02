@@ -19,6 +19,7 @@ See the [Changelog](CHANGELOG.md) for a full history of changes across all versi
  - [AstroAC](https://astroac.cc/)
 
 **Free AntiCheats**:
+ - BEAntiCheat (Bedrock players joining through Geyser/Floodgate)
  - [Themis](https://www.spigotmc.org/resources/90766/)
  - [FlappyAC](https://www.spigotmc.org/resources/92180/)
  - [AntiCheatReloaded](https://www.spigotmc.org/resources/23799/)
@@ -47,6 +48,8 @@ Requires a supported AntiCheat and BetterReplay to be installed and running on y
 NOTE: AntiCheat-driven recordings still depend on the integrations your AntiCheat exposes. For most integrations, a flag starts the recording and a punish event causes it to be saved. The `/report` command can also start and save a recording without relying on a punish event.
 
 
+Several supported AntiCheats can be installed at the same time; each of them can start a recording.
+
 ### Setup:
 - Vulcan: Set `enable-api` in Vulcan's config to "true"
 - Soaroma: Set `enableAPI` in Soaroma's config to "true"
@@ -72,7 +75,8 @@ Enable MySQL to store the files (This plugin can generate a lot of recordings if
 ```YAML
 General:
   Overwrite: false  # Should we overwrite a recording if a player did the same hack on the same date?
-  Check-Update: true  # Be notified when this plugin updates
+  Check-Update: false  # Be notified when this plugin updates
+  Metrics: false  # Send anonymous usage statistics (bStats)
   Nearby-Range: 30  # How far to look for nearby players to include in the recording?
   Recording-Length: 2  # Length in minutes of a recording.
   Notify-Staff: true  # Notify staff with AntiCheatReplay.recording-notify when a replay is saved.
@@ -87,6 +91,13 @@ Vulcan:
 Themis:
   Disabled-Actions:   # Themis actions to disable, refer to the Themis config.yml.
     - notify
+BEAntiCheat:
+  Disabled-Recordings: # BEAntiCheat checks that should never start a recording
+    - attack-angle
+    - inventory-rate
+  Min-VL: 2.0      # Start recording once a check reaches this violation level
+  Save-VL: 5.0     # Keep the recording when a check reaches this violation level (0 = never)
+  Save-On-Kick: true  # Keep the recording when BEAntiCheat kicks the player
 Discord: # Send a recording notification to a Discord channel.
   Enabled: true
   Webhook: Enter webhook here
